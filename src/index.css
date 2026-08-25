@@ -1,0 +1,98 @@
+:root {
+  /* Palette — keep these if you restyle anything else */
+  --pink-blush: #f8d5de;
+  --pink: #f0b7c4;
+  --pink-deep: #e392a6;
+  --cream: #fff6ee;
+  --cream-dark: #f0dcc8;
+  --gold: #c9a36a;
+  --gold-soft: #e8d5a8;
+  --text: #5c3d4a;
+  --text-soft: #8a6572;
+  --white: #fffdfb;
+  --flame: #ffb347;
+  --shadow: rgba(92, 61, 74, 0.16);
+
+  --serif: 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+  --sans: 'Segoe UI', system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: clip;
+  overflow-y: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--sans);
+  background:
+    radial-gradient(ellipse at 50% 12%, #fff8f4 0%, #f8dfe6 42%, #f3d2c8 100%);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  overflow-y: auto;
+}
+
+#root {
+  min-height: 100svh;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Skip motion if the OS asks for it */
+  .flame,
+  .sparkle,
+  .header-ornament,
+  .smoke,
+  .confetti,
+  .cake-scene.is-celebrating .cake,
+  .cake-scene.is-climax::after,
+  .birthday-header.is-celebrating h1,
+  .surprise-button,
+  .birthday-letter,
+  .candle.is-blowing .flame.is-extinguishing {
+    animation: none !important;
+  }
+
+  .page,
+  .birthday-header,
+  .cake-scene,
+  .candles,
+  .candle,
+  .wax,
+  .drip,
+  .layer-top,
+  .layer-bottom,
+  .surprise-button,
+  .birthday-letter,
+  .sparkle {
+    transition: none !important;
+  }
+
+  .smoke,
+  .confetti,
+  .sparkle-climax,
+  .cake-scene.is-climax::after {
+    display: none;
+  }
+
+  .flame.is-extinguishing {
+    opacity: 0;
+  }
+}
