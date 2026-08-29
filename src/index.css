@@ -77,6 +77,8 @@ body {
   .blow-hint,
   .birthday-letter,
   .birthday-letter.is-visible,
+  .letter-floaters,
+  .letter-floater-tip,
   .cake-balloon,
   .letter-floater:not(.is-popped),
   .floater-heart,

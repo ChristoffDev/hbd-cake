@@ -1,32 +1,43 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import LetterFloaters from './LetterFloaters'
+
+const FLOATER_IN_MS = 450
+const LETTER_FOCUS_MS = 700
 
 // The letter card. Copy comes from config.js.
 function BirthdayMessage({ letter, isVisible }) {
   const letterRef = useRef(null)
+  const [showFloaters, setShowFloaters] = useState(false)
 
   useEffect(() => {
     if (!isVisible) {
+      setShowFloaters(false)
       return undefined
     }
 
-    const letterElement = letterRef.current
     const reduceMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)'
     ).matches
-    const delay = reduceMotion ? 0 : 520
+    const floaterDelay = reduceMotion ? 0 : FLOATER_IN_MS
+    const focusDelay = reduceMotion ? 0 : LETTER_FOCUS_MS
 
-    const timeoutId = window.setTimeout(() => {
-      // Move keyboard focus onto the letter without scrolling the header away
-      letterElement?.focus({ preventScroll: true })
-    }, delay)
+    const floaterTimer = window.setTimeout(() => {
+      setShowFloaters(true)
+    }, floaterDelay)
 
-    return () => window.clearTimeout(timeoutId)
+    const focusTimer = window.setTimeout(() => {
+      letterRef.current?.focus({ preventScroll: true })
+    }, focusDelay)
+
+    return () => {
+      window.clearTimeout(floaterTimer)
+      window.clearTimeout(focusTimer)
+    }
   }, [isVisible])
 
   return (
     <div className={`letter-wrap ${isVisible ? 'is-visible' : ''}`}>
-      {isVisible && <LetterFloaters />}
+      {showFloaters && <LetterFloaters />}
       <article
         ref={letterRef}
         className={`birthday-letter ${isVisible ? 'is-visible' : ''}`}
