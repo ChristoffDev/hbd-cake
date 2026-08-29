@@ -286,17 +286,17 @@
 }
 
 .landing-stage .birthday-header {
-  animation: landing-in 0.65s ease-out backwards;
+  animation: landing-in 0.65s ease-out 0.45s backwards;
 }
 
 .landing-stage .cake-stage {
-  animation: cake-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+  animation: cake-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.58s backwards;
 }
 
 .landing-stage .blow-hint {
   animation:
-    landing-in 0.65s ease-out 0.4s backwards,
-    hint-glow 2s ease-in-out 1.05s infinite;
+    landing-in 0.65s ease-out 0.9s backwards,
+    hint-glow 2s ease-in-out 1.55s infinite;
 }
 
 /* Header copy */
@@ -891,6 +891,15 @@
 .birthday-letter .letter-from {
   margin: 0;
   color: var(--gold);
+}
+
+.letter-floater-tip {
+  margin: 14px 0 0;
+  color: var(--text-soft);
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  text-align: center;
 }
 
 /* Candles sit on top of the cake */

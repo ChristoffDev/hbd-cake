@@ -51,6 +51,9 @@ function BirthdayMessage({ letter, isVisible }) {
         <p className="letter-signoff">{letter.signOff}</p>
         <p className="letter-from">{letter.from}</p>
       </article>
+      {isVisible && letter.floaterTip && (
+        <p className="letter-floater-tip">{letter.floaterTip}</p>
+      )}
     </div>
   )
 }
