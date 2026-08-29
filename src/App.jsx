@@ -5,6 +5,7 @@ import Celebration from './components/Celebration'
 import SurpriseButton from './components/SurpriseButton'
 import BirthdayMessage from './components/BirthdayMessage'
 import MusicToggle from './components/MusicToggle'
+import LandingCover from './components/LandingCover'
 import { birthdayConfig } from './config'
 import './App.css'
 
@@ -19,6 +20,7 @@ const startingCandles = [
 
 const BLOW_MS = 300 // flame shrink before it goes out
 const CLIMAX_MS = 800 // pause after the last candle, before "Wish granted"
+const COVER_FADE_MS = 1100
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -26,12 +28,15 @@ function prefersReducedMotion() {
 
 function App() {
   const [candles, setCandles] = useState(startingCandles)
+  const [hasStarted, setHasStarted] = useState(false)
+  const [coverGone, setCoverGone] = useState(false)
   const [isLetterOpen, setIsLetterOpen] = useState(false)
   const [isWishGranted, setIsWishGranted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const timersRef = useRef([])
   const audioRef = useRef(null)
   const userPausedRef = useRef(false)
+  const hasStartedRef = useRef(false)
 
   function motionDelay(ms) {
     return prefersReducedMotion() ? 0 : ms
@@ -92,6 +97,22 @@ function App() {
     timersRef.current.push(timer)
   }
 
+  function startFromCover() {
+    if (hasStartedRef.current) {
+      return
+    }
+
+    hasStartedRef.current = true
+    playMusic()
+    setHasStarted(true)
+
+    const timer = window.setTimeout(() => {
+      setCoverGone(true)
+    }, motionDelay(COVER_FADE_MS))
+
+    timersRef.current.push(timer)
+  }
+
   function openLetter() {
     playMusic()
     setIsLetterOpen(true)
@@ -120,45 +141,6 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) {
-      return undefined
-    }
-
-    let cancelled = false
-    audio.volume = 0.42
-
-    function unlock() {
-      if (!cancelled) {
-        playMusic()
-      }
-      window.removeEventListener('pointerdown', unlock)
-      window.removeEventListener('keydown', unlock)
-    }
-
-    audio.play().then(
-      () => {
-        if (!cancelled) {
-          setIsPlaying(true)
-        }
-      },
-      () => {
-        if (cancelled) {
-          return
-        }
-        window.addEventListener('pointerdown', unlock)
-        window.addEventListener('keydown', unlock)
-      }
-    )
-
-    return () => {
-      cancelled = true
-      window.removeEventListener('pointerdown', unlock)
-      window.removeEventListener('keydown', unlock)
-    }
-  }, [])
-
   const hint =
     remaining === candles.length
       ? birthdayConfig.blowHint
@@ -166,6 +148,7 @@ function App() {
 
   const pageClass = [
     'page',
+    hasStarted ? 'is-started' : 'is-covered',
     isClimax ? 'is-climax' : '',
     isWishGranted ? 'is-celebrating' : '',
     isLetterOpen ? 'is-letter-open' : '',
@@ -178,38 +161,50 @@ function App() {
       <MusicToggle
         audioRef={audioRef}
         isPlaying={isPlaying}
+        isVisible={hasStarted}
         onToggle={toggleMusic}
       />
-      {isWishGranted && <Celebration />}
-      <BirthdayHeader
-        kicker={birthdayConfig.kicker}
-        title={isWishGranted ? birthdayConfig.wishGranted : birthdayConfig.title}
-        subtitle={
-          isWishGranted
-            ? birthdayConfig.wishGrantedNote
-            : birthdayConfig.wishPrompt
-        }
-        isCelebrating={isWishGranted}
-        isClimax={isClimax}
-      />
-      <BirthdayCake
-        candles={candles}
-        onBlowOut={blowOutCandle}
-        isCelebrating={isWishGranted}
-        isClimax={isClimax}
-      />
-      {!allOut && <p className="blow-hint">{hint}</p>}
-      {isWishGranted && (
-        <div className={`reveal-stage ${isLetterOpen ? 'is-open' : ''}`}>
-          <SurpriseButton
-            label={birthdayConfig.surpriseButton}
-            onOpen={openLetter}
-            isHidden={isLetterOpen}
+      {!coverGone && (
+        <LandingCover
+          cover={birthdayConfig.cover}
+          isLeaving={hasStarted}
+          onStart={startFromCover}
+        />
+      )}
+      {hasStarted && (
+        <div className="landing-stage">
+          {isWishGranted && <Celebration />}
+          <BirthdayHeader
+            kicker={birthdayConfig.kicker}
+            title={isWishGranted ? birthdayConfig.wishGranted : birthdayConfig.title}
+            subtitle={
+              isWishGranted
+                ? birthdayConfig.wishGrantedNote
+                : birthdayConfig.wishPrompt
+            }
+            isCelebrating={isWishGranted}
+            isClimax={isClimax}
           />
-          <BirthdayMessage
-            letter={birthdayConfig.letter}
-            isVisible={isLetterOpen}
+          <BirthdayCake
+            candles={candles}
+            onBlowOut={blowOutCandle}
+            isCelebrating={isWishGranted}
+            isClimax={isClimax}
           />
+          {!allOut && <p className="blow-hint">{hint}</p>}
+          {isWishGranted && (
+            <div className={`reveal-stage ${isLetterOpen ? 'is-open' : ''}`}>
+              <SurpriseButton
+                label={birthdayConfig.surpriseButton}
+                onOpen={openLetter}
+                isHidden={isLetterOpen}
+              />
+              <BirthdayMessage
+                letter={birthdayConfig.letter}
+                isVisible={isLetterOpen}
+              />
+            </div>
+          )}
         </div>
       )}
     </main>

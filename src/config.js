@@ -1,6 +1,14 @@
 // All of the copy lives here so you can edit the site without touching React.
 
 export const birthdayConfig = {
+  // First screen, before she opens the cake
+  cover: {
+    kicker: 'a little something',
+    title: 'For you, Love',
+    hint: 'Pull',
+    volumeTip: 'Turn the volume up',
+  },
+
   // Header before the candles are out
   kicker: 'with all my love',
   title: 'Happy Birthday, My Love ❤️',
@@ -14,7 +22,7 @@ export const birthdayConfig = {
   wishGrantedNote: 'I hope it was a sweet one.',
   surpriseButton: 'Open My Letter 💌',
 
-  // Starts on load (or the first tap if the browser blocks autoplay). File is in public/music/
+  // Starts when she opens the cover. File is in public/music/
   song: '/music/libu-libong-buwan.mp3',
 
   // Shown after she opens the letter. Photo files go in /public.

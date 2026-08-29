@@ -65,6 +65,16 @@ body {
   .cake-scene.is-climax::after,
   .birthday-header.is-celebrating h1,
   .surprise-button,
+  .landing-cover,
+  .landing-cover-kicker,
+  .landing-cover-title,
+  .landing-cover-volume,
+  .curtain-rope,
+  .rope-label,
+  .landing-stage,
+  .landing-stage .birthday-header,
+  .landing-stage .cake-stage,
+  .blow-hint,
   .birthday-letter,
   .birthday-letter.is-visible,
   .cake-balloon,
@@ -78,6 +88,9 @@ body {
   }
 
   .page,
+  .landing-cover,
+  .curtain-cloth,
+  .curtain-rail,
   .birthday-header,
   .cake-scene,
   .candles,
@@ -103,6 +116,19 @@ body {
   .letter-floater.is-popped .floater-shape {
     opacity: 0;
     transform: scale(0);
+  }
+
+  .landing-cover.is-leaving {
+    opacity: 0;
+    transform: none;
+  }
+
+  .landing-cover.is-leaving .curtain-cloth {
+    clip-path: none;
+  }
+
+  .landing-cover.is-leaving .curtain-rail {
+    opacity: 0;
   }
 
   .flame.is-extinguishing {
