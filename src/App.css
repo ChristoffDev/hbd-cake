@@ -1507,6 +1507,16 @@
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.35s ease;
+}
+
+.page.is-letter-open .music-toggle {
+  opacity: 0.38;
+}
+
+.page.is-letter-open .music-toggle:hover,
+.page.is-letter-open .music-toggle:focus-visible {
+  opacity: 1;
 }
 
 .music-toggle:focus-visible {
