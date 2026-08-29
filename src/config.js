@@ -14,6 +14,9 @@ export const birthdayConfig = {
   wishGrantedNote: 'I hope it was a sweet one.',
   surpriseButton: 'Open My Letter 💌',
 
+  // Starts on load (or the first tap if the browser blocks autoplay). File is in public/music/
+  song: '/music/libu-libong-buwan.mp3',
+
   // Shown after she opens the letter. Photo files go in /public.
   letter: {
     greeting: 'Hi Love,',

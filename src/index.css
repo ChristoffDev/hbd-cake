@@ -66,6 +66,13 @@ body {
   .birthday-header.is-celebrating h1,
   .surprise-button,
   .birthday-letter,
+  .birthday-letter.is-visible,
+  .cake-balloon,
+  .letter-floater:not(.is-popped),
+  .floater-heart,
+  .burst-flash,
+  .burst-spark,
+  .burst-streak,
   .candle.is-blowing .flame.is-extinguishing {
     animation: none !important;
   }
@@ -88,8 +95,14 @@ body {
   .smoke,
   .confetti,
   .sparkle-climax,
-  .cake-scene.is-climax::after {
+  .cake-scene.is-climax::after,
+  .floater-burst {
     display: none;
+  }
+
+  .letter-floater.is-popped .floater-shape {
+    opacity: 0;
+    transform: scale(0);
   }
 
   .flame.is-extinguishing {

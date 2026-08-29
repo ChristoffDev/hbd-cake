@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import LetterFloaters from './LetterFloaters'
 
 // The letter card. Copy comes from config.js.
 function BirthdayMessage({ letter, isVisible }) {
@@ -24,30 +25,33 @@ function BirthdayMessage({ letter, isVisible }) {
   }, [isVisible])
 
   return (
-    <article
-      ref={letterRef}
-      className={`birthday-letter ${isVisible ? 'is-visible' : ''}`}
-      tabIndex={-1}
-      aria-labelledby="letter-greeting"
-      aria-hidden={!isVisible}
-    >
-      <h2 id="letter-greeting">{letter.greeting}</h2>
+    <div className={`letter-wrap ${isVisible ? 'is-visible' : ''}`}>
+      {isVisible && <LetterFloaters />}
+      <article
+        ref={letterRef}
+        className={`birthday-letter ${isVisible ? 'is-visible' : ''}`}
+        tabIndex={-1}
+        aria-labelledby="letter-greeting"
+        aria-hidden={!isVisible}
+      >
+        <h2 id="letter-greeting">{letter.greeting}</h2>
 
-      {letter.photo && (
-        <img
-          className="letter-photo"
-          src={letter.photo}
-          alt={letter.photoAlt}
-        />
-      )}
+        {letter.photo && (
+          <img
+            className="letter-photo"
+            src={letter.photo}
+            alt={letter.photoAlt}
+          />
+        )}
 
-      {letter.paragraphs.map((paragraph, index) => (
-        <p key={index}>{paragraph}</p>
-      ))}
+        {letter.paragraphs.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
+        ))}
 
-      <p className="letter-signoff">{letter.signOff}</p>
-      <p className="letter-from">{letter.from}</p>
-    </article>
+        <p className="letter-signoff">{letter.signOff}</p>
+        <p className="letter-from">{letter.from}</p>
+      </article>
+    </div>
   )
 }
 

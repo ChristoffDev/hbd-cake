@@ -4,6 +4,7 @@ import BirthdayCake from './components/BirthdayCake'
 import Celebration from './components/Celebration'
 import SurpriseButton from './components/SurpriseButton'
 import BirthdayMessage from './components/BirthdayMessage'
+import MusicToggle from './components/MusicToggle'
 import { birthdayConfig } from './config'
 import './App.css'
 
@@ -27,13 +28,50 @@ function App() {
   const [candles, setCandles] = useState(startingCandles)
   const [isLetterOpen, setIsLetterOpen] = useState(false)
   const [isWishGranted, setIsWishGranted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
   const timersRef = useRef([])
+  const audioRef = useRef(null)
+  const userPausedRef = useRef(false)
 
   function motionDelay(ms) {
     return prefersReducedMotion() ? 0 : ms
   }
 
+  async function playMusic() {
+    const audio = audioRef.current
+    if (!audio || !audio.paused || userPausedRef.current) {
+      return
+    }
+
+    audio.volume = 0.42
+    try {
+      await audio.play()
+      setIsPlaying(true)
+    } catch {
+      // Browser blocked autoplay until the next tap
+    }
+  }
+
+  function toggleMusic() {
+    const audio = audioRef.current
+    if (!audio) {
+      return
+    }
+
+    if (!audio.paused) {
+      userPausedRef.current = true
+      audio.pause()
+      setIsPlaying(false)
+      return
+    }
+
+    userPausedRef.current = false
+    playMusic()
+  }
+
   function blowOutCandle(id) {
+    playMusic()
+
     // isBlowing plays the flame-out animation; isLit flips after BLOW_MS
     setCandles((currentCandles) =>
       currentCandles.map((candle) =>
@@ -55,6 +93,7 @@ function App() {
   }
 
   function openLetter() {
+    playMusic()
     setIsLetterOpen(true)
   }
 
@@ -81,6 +120,45 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) {
+      return undefined
+    }
+
+    let cancelled = false
+    audio.volume = 0.42
+
+    function unlock() {
+      if (!cancelled) {
+        playMusic()
+      }
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+    }
+
+    audio.play().then(
+      () => {
+        if (!cancelled) {
+          setIsPlaying(true)
+        }
+      },
+      () => {
+        if (cancelled) {
+          return
+        }
+        window.addEventListener('pointerdown', unlock)
+        window.addEventListener('keydown', unlock)
+      }
+    )
+
+    return () => {
+      cancelled = true
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+    }
+  }, [])
+
   const hint =
     remaining === candles.length
       ? birthdayConfig.blowHint
@@ -97,6 +175,11 @@ function App() {
 
   return (
     <main className={pageClass}>
+      <MusicToggle
+        audioRef={audioRef}
+        isPlaying={isPlaying}
+        onToggle={toggleMusic}
+      />
       {isWishGranted && <Celebration />}
       <BirthdayHeader
         kicker={birthdayConfig.kicker}

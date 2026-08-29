@@ -2,7 +2,7 @@
 
 Birthday page with a cake you can blow out, then a letter at the end.
 
-Copy and photos are in `src/config.js`. Put images in `public/` and point `letter.photo` at them, e.g. `/photo-1.jpg`.
+Copy and photos are in `src/config.js`. Put images in `public/` and point `letter.photo` at them, e.g. `/photo-1.jpg`. The looping song is `public/music/libu-libong-buwan.mp3`; it starts with the page. Use the ♪ button to mute it.
 
 ## Run
 
